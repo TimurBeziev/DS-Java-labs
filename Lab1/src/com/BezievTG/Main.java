@@ -6,26 +6,32 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     private static JFrame frame;
-    private static JTextArea main_text_area;
-    private static JLabel save_file_label;
-    private static boolean is_file_saved = true;
+    private static JTextArea mainTextArea;
+    private static JLabel saveFileLabel;
+    private static boolean isFileSaved = true;
 
-    private static void InitializeUI() {
+    private static void initializeUI()  {
         frame = new JFrame("LABA 1 JAVA");
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         WindowListener exitListener = new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if (!is_file_saved) {
+                if (!isFileSaved) {
                     int confirm = JOptionPane.showOptionDialog(
                             null, "Do you want to save the file before closing?",
                             "Exit Confirmation", JOptionPane.YES_NO_CANCEL_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, null, null);
                     if (confirm == 0) {
-                        ShowSaveFileDialog();
+                        if (showSaveFileDialog() != JFileChooser.APPROVE_OPTION) {
+                            return;
+                        }
                         System.exit(0);
                     }
                     if (confirm == 1) {
@@ -39,106 +45,109 @@ public class Main {
         frame.addWindowListener(exitListener);
         frame.setSize(400, 400);
 
-        main_text_area = new JTextArea();
-        main_text_area.getDocument().addDocumentListener(new ChangeFileListener());
+        mainTextArea = new JTextArea();
+        mainTextArea.getDocument().addDocumentListener(new changeFileListener());
 
         JMenuBar menu = new JMenuBar();
-        JMenu file_bar = new JMenu("FILE");
-        JMenuItem open_file = new JMenuItem("Open");
-        JMenuItem save_file_as = new JMenuItem("Save as");
+        JMenu fileBar = new JMenu("FILE");
+        JMenuItem openFile = new JMenuItem("Open");
+        JMenuItem saveFileAs = new JMenuItem("Save as");
 
-        open_file.addActionListener(new OpenFileListener());
-        save_file_as.addActionListener(new SaveFileListener());
+        openFile.addActionListener(new openFileListener());
+        saveFileAs.addActionListener(new saveFileListener());
 
-        menu.add(file_bar);
-        file_bar.add(open_file);
-        file_bar.add(save_file_as);
+        menu.add(fileBar);
+        fileBar.add(openFile);
+        fileBar.add(saveFileAs);
 
-        JPanel lower_panel = new JPanel();
-        save_file_label = new JLabel();
-        IsFileSaved(true);
-        JButton format_text = new JButton("Format text");
-        format_text.addActionListener(new FormatTextListener());
-        lower_panel.add(format_text);
-        lower_panel.add(save_file_label);
+        JPanel lowerPanel = new JPanel();
+        saveFileLabel = new JLabel();
+        isFileSaved(true);
+        JButton formatText = new JButton("Format text");
+        formatText.addActionListener(new formatTextListener());
+        lowerPanel.add(formatText);
+        lowerPanel.add(saveFileLabel);
 
-        frame.getContentPane().add(BorderLayout.SOUTH, lower_panel);
+        frame.getContentPane().add(BorderLayout.SOUTH, lowerPanel);
         frame.getContentPane().add(BorderLayout.NORTH, menu);
-        frame.getContentPane().add(BorderLayout.CENTER, main_text_area);
+        frame.getContentPane().add(BorderLayout.CENTER, mainTextArea);
         frame.setVisible(true);
     }
 
-    private static class FormatTextListener implements ActionListener {
+    private static class formatTextListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            String formatted_text = FixPunctuation();
+            String formattedText = fixPunctuation();
             try {
-                ShowText(formatted_text);
+                showText(formattedText);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
         }
     }
 
-    private static String FixPunctuation() {
-        String input_text = main_text_area.getText();
-        input_text = input_text.
+    private static String fixPunctuation() {
+        String inputText = mainTextArea.getText();
+        inputText = inputText.
                 replaceAll("( )+", " ").
                 replaceAll("\s+(?=[,.?!:«()»;…])", "").
                 replaceAll("«+\s*", " «").
-                replaceAll("[(]+\s*", " (");
-        return input_text;
+                replaceAll("[(]+\s*", " (").
+                replaceAll("\s*+[)]", ")").
+                replaceAll("\s*+[»]", "»");
+        inputText = inputText.trim();
+        return inputText;
     }
 
-    private static void ShowText(String text) throws InterruptedException {
-        main_text_area.setText(text);
+    private static void showText(String text) throws InterruptedException {
+        mainTextArea.setText(text);
     }
 
-    private static void ShowOpenFileDialog() {
+    private static void showOpenFileDialog() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showOpenDialog(frame);
         if (option == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             try {
-                BufferedReader br = new BufferedReader(new FileReader(selectedFile));
-                String text_from_file;
-                main_text_area.setText("");
-                while ((text_from_file = br.readLine()) != null) {
-                    main_text_area.append(text_from_file);
+                mainTextArea.setText("");
+                List<String> lines = Files.readAllLines(selectedFile.toPath());
+                for (String line: lines) {
+                    mainTextArea.append(line);
+                    mainTextArea.append("\n");
                 }
-                IsFileSaved(true);
+                isFileSaved(true);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
     }
 
-    private static class OpenFileListener implements ActionListener {
+    private static class openFileListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (!is_file_saved) {
+            if (!isFileSaved) {
                 int input = JOptionPane.showConfirmDialog(
                         null,
                         "File is not saved. Do you want to save it?",
                         "Attention!",
                         JOptionPane.YES_NO_OPTION);
                 if (input == 0) {
-                    ShowSaveFileDialog();
+                    showSaveFileDialog();
                 }
             }
-            ShowOpenFileDialog();
+            showOpenFileDialog();
         }
     }
 
-    private static void ShowSaveFileDialog() {
+    private static int showSaveFileDialog() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showSaveDialog(frame);
         if (option == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             try {
                 if (selectedFile.createNewFile()) {
-                    WriteToFile(selectedFile, main_text_area.getText());
-                    IsFileSaved(true);
+                    writeToFile(selectedFile, mainTextArea.getText());
+                    isFileSaved(true);
                 } else {
                     int input = JOptionPane.showConfirmDialog(
                             null,
@@ -146,56 +155,57 @@ public class Main {
                             "Attention!",
                             JOptionPane.YES_NO_CANCEL_OPTION);
                     if (input == 0) {
-                        WriteToFile(selectedFile, main_text_area.getText());
-                        IsFileSaved(true);
+                        writeToFile(selectedFile, mainTextArea.getText());
+                        isFileSaved(true);
                     }
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
+        return option;
     }
 
-    private static class SaveFileListener implements ActionListener {
+    private static class saveFileListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            ShowSaveFileDialog();
+            showSaveFileDialog();
         }
     }
 
-    private static void WriteToFile(File file, String text) throws IOException {
+    private static void writeToFile(File file, String text) throws IOException {
         FileWriter fileWriter = new FileWriter(file.getName(), false);
         fileWriter.write(text);
         fileWriter.close();
     }
 
-    private static void IsFileSaved(boolean is_saved) {
-        is_file_saved = is_saved;
-        if (is_saved) {
-            save_file_label.setText("");
+    private static void isFileSaved(boolean isSaved) {
+        isFileSaved = isSaved;
+        if (isSaved) {
+            saveFileLabel.setText("");
         } else {
-            save_file_label.setText("Edited");
+            saveFileLabel.setText("Edited");
         }
     }
 
-    private static class ChangeFileListener implements DocumentListener {
+    private static class changeFileListener implements DocumentListener {
         @Override
         public void insertUpdate(DocumentEvent e) {
-            IsFileSaved(false);
+            isFileSaved(false);
         }
 
         @Override
         public void removeUpdate(DocumentEvent e) {
-            IsFileSaved(false);
+            isFileSaved(false);
         }
 
         @Override
         public void changedUpdate(DocumentEvent e) {
-            IsFileSaved(false);
+            isFileSaved(false);
         }
     }
 
     public static void main(String[] args) {
-        InitializeUI();
+        initializeUI();
     }
 }
