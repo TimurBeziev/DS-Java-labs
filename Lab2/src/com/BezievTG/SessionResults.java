@@ -1,19 +1,35 @@
 package com.BezievTG;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SessionResults {
-    private final ArrayList<Student> students;
+    private List<Student> students;
+
     public SessionResults() {
         students = new ArrayList<>();
     }
+
     public void addStudent(Student student) {
         if (student == null) {
             return;
         }
         students.add(student);
+        sortStudents();
     }
-    public ArrayList<Student> getStudents() {
+
+    public List<Student> getStudents() {
         return students;
+    }
+
+    private void sortStudents() {
+        Comparator<Student> studentComparator
+                = Comparator.comparing(Student::getGroup)
+                .thenComparing(Student::getSurname);
+        students = students.stream().sorted(studentComparator).collect(Collectors.toList());
+//        sortedStudents.forEach(System.out::println);
     }
 }

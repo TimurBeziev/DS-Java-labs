@@ -7,6 +7,13 @@ public class Student {
         this.exam1Passed = exam1Passed;
         this.exam2Passed = exam2Passed;
     }
+
+    public String getSurname() {
+        return surname;
+    }
+    public int getGroup() {
+        return group;
+    }
     private final String surname;
     private final int group;
     private final boolean exam1Passed;
@@ -14,7 +21,7 @@ public class Student {
 
     @Override
     public String toString() {
-        return  surname + '\t' + group + '\t' +
+        return surname + '\t' + group + '\t' +
                 "Exam1 passed:\t " + exam1Passed + '\t' +
                 "Exam2 passed:\t " + exam2Passed + '\n';
     }

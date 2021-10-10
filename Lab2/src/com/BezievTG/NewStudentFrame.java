@@ -10,7 +10,6 @@ public class NewStudentFrame {
     private final JTextField studentGroup;
     private final JCheckBox exam1;
     private final JCheckBox exam2;
-    private Student student;
     private final SessionResults sessionResults;
     private final JLabel isCorrectInputData;
     private final JTextArea textArea;
@@ -30,8 +29,8 @@ public class NewStudentFrame {
         content.add(new JLabel("Group"));
         content.add(studentGroup);
 
-        exam1 = new JCheckBox("Exam 1 passed");
-        exam2 = new JCheckBox("Exam 2 passed");
+        exam1 = new JCheckBox("Exam 1 passed", true);
+        exam2 = new JCheckBox("Exam 2 passed", true);
         content.add(exam1);
         content.add(exam2);
 
@@ -48,7 +47,7 @@ public class NewStudentFrame {
 
     private void updateStudentsInfo() {
         textArea.setText("");
-        for (Student student: sessionResults.getStudents()) {
+        for (Student student : sessionResults.getStudents()) {
             textArea.append(student.toString());
         }
     }
@@ -72,7 +71,7 @@ public class NewStudentFrame {
                 return;
             }
             isCorrectInputData.setText("");
-            student = new Student(
+            Student student = new Student(
                     studentSurnameField.getText(),
                     group,
                     exam1.isSelected(),
