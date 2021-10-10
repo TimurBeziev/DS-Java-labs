@@ -12,12 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+    //    Избавиться от статики!
     private static JFrame frame;
     private static JTextArea mainTextArea;
     private static JLabel saveFileLabel;
     private static boolean isFileSaved = true;
 
-    private static void initializeUI()  {
+    public void initializeUI() {
         frame = new JFrame("LABA 1 JAVA");
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         WindowListener exitListener = new WindowAdapter() {
@@ -74,7 +75,7 @@ public class Main {
         frame.setVisible(true);
     }
 
-    private static class formatTextListener implements ActionListener {
+    private class formatTextListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             String formattedText = fixPunctuation();
@@ -86,7 +87,7 @@ public class Main {
         }
     }
 
-    private static String fixPunctuation() {
+    private String fixPunctuation() {
         String inputText = mainTextArea.getText();
         inputText = inputText.
                 replaceAll("( )+", " ").
@@ -99,11 +100,11 @@ public class Main {
         return inputText;
     }
 
-    private static void showText(String text) throws InterruptedException {
+    private void showText(String text) throws InterruptedException {
         mainTextArea.setText(text);
     }
 
-    private static void showOpenFileDialog() {
+    private void showOpenFileDialog() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showOpenDialog(frame);
         if (option == JFileChooser.APPROVE_OPTION) {
@@ -111,7 +112,7 @@ public class Main {
             try {
                 mainTextArea.setText("");
                 List<String> lines = Files.readAllLines(selectedFile.toPath());
-                for (String line: lines) {
+                for (String line : lines) {
                     mainTextArea.append(line);
                     mainTextArea.append("\n");
                 }
@@ -122,7 +123,7 @@ public class Main {
         }
     }
 
-    private static class openFileListener implements ActionListener {
+    private class openFileListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (!isFileSaved) {
@@ -139,7 +140,7 @@ public class Main {
         }
     }
 
-    private static int showSaveFileDialog() {
+    private int showSaveFileDialog() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showSaveDialog(frame);
         if (option == JFileChooser.APPROVE_OPTION) {
@@ -166,20 +167,20 @@ public class Main {
         return option;
     }
 
-    private static class saveFileListener implements ActionListener {
+    private class saveFileListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             showSaveFileDialog();
         }
     }
 
-    private static void writeToFile(File file, String text) throws IOException {
+    private void writeToFile(File file, String text) throws IOException {
         FileWriter fileWriter = new FileWriter(file.getName(), false);
         fileWriter.write(text);
         fileWriter.close();
     }
 
-    private static void isFileSaved(boolean isSaved) {
+    private void isFileSaved(boolean isSaved) {
         isFileSaved = isSaved;
         if (isSaved) {
             saveFileLabel.setText("");
@@ -188,7 +189,7 @@ public class Main {
         }
     }
 
-    private static class changeFileListener implements DocumentListener {
+    private class changeFileListener implements DocumentListener {
         @Override
         public void insertUpdate(DocumentEvent e) {
             isFileSaved(false);
@@ -206,6 +207,10 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        initializeUI();
+        Main main = new Main();
+        main.initializeUI();
+
+        Main main2 = new Main();
+        main2.initializeUI();
     }
 }
