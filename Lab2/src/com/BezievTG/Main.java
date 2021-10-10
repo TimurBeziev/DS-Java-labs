@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -14,6 +15,7 @@ public class Main {
     private static JTextArea mainTextArea;
     private static JLabel saveFileLabel;
     private static boolean isFileSaved = true;
+    private SessionResults sessionResults;
 
     public void initializeUI() {
         frame = new JFrame("LABA 2 JAVA");
@@ -67,34 +69,19 @@ public class Main {
         lowerPanel.add(addStudent);
         lowerPanel.add(saveFileLabel);
 
+        sessionResults = new SessionResults();
+
         frame.getContentPane().add(BorderLayout.SOUTH, lowerPanel);
         frame.getContentPane().add(BorderLayout.NORTH, menu);
         frame.getContentPane().add(BorderLayout.CENTER, mainTextArea);
         frame.setVisible(true);
     }
 
-    private static class addStudentListener implements ActionListener {
+    private class addStudentListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            AddStudentFrame addStudentFrame = new AddStudentFrame();
+            NewStudentFrame newStudentFrame = new NewStudentFrame(sessionResults, mainTextArea);
         }
-    }
-
-    private String fixPunctuation() {
-        String inputText = mainTextArea.getText();
-        inputText = inputText.
-                replaceAll("( )+", " ").
-                replaceAll("\s+(?=[,.?!:«()»;…])", "").
-                replaceAll("«+\s*", " «").
-                replaceAll("[(]+\s*", " (").
-                replaceAll("\s*+[)]", ")").
-                replaceAll("\s*+[»]", "»");
-        inputText = inputText.trim();
-        return inputText;
-    }
-
-    private void showText(String text) throws InterruptedException {
-        mainTextArea.setText(text);
     }
 
     private void showOpenFileDialog() {
@@ -200,7 +187,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Main main = new Main();
-        main.initializeUI();
+        Main lab2 = new Main();
+        lab2.initializeUI();
     }
 }

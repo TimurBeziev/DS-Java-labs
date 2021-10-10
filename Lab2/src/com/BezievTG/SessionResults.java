@@ -3,11 +3,17 @@ package com.BezievTG;
 import java.util.ArrayList;
 
 public class SessionResults {
-    private ArrayList<Student> names;
+    private final ArrayList<Student> students;
     public SessionResults() {
-        names = new ArrayList<>();
+        students = new ArrayList<>();
     }
     public void addStudent(Student student) {
-        names.add(student);
+        if (student == null) {
+            return;
+        }
+        students.add(student);
+    }
+    public ArrayList<Student> getStudents() {
+        return students;
     }
 }
