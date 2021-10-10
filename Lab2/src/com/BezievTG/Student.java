@@ -1,6 +1,8 @@
 package com.BezievTG;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable {
     public Student(String surname, int group, boolean exam1Passed, boolean exam2Passed) {
         this.surname = surname;
         this.group = group;
@@ -11,9 +13,15 @@ public class Student {
     public String getSurname() {
         return surname;
     }
+
     public int getGroup() {
         return group;
     }
+
+    public boolean isDebtor() {
+        return !(exam1Passed & exam2Passed);
+    }
+
     private final String surname;
     private final int group;
     private final boolean exam1Passed;

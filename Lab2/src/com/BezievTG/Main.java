@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -18,7 +17,7 @@ public class Main {
     private SessionResults sessionResults;
 
     public void initializeUI() {
-        frame = new JFrame("LABA 2 JAVA");
+        frame = new JFrame("LAB 2 JAVA");
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         WindowListener exitListener = new WindowAdapter() {
             @Override
@@ -66,7 +65,13 @@ public class Main {
         isFileSaved(true);
         JButton addStudent = new JButton("Add Student");
         addStudent.addActionListener(new addStudentListener());
+        JButton showDebtorStudents = new JButton("Show Debtor Students");
+        showDebtorStudents.addActionListener(new showDebtorsListener());
+        JButton showAllStudents = new JButton("Show All Students");
+        showAllStudents.addActionListener(new showAllStudentsListener());
         lowerPanel.add(addStudent);
+        lowerPanel.add(showDebtorStudents);
+        lowerPanel.add(showAllStudents);
         lowerPanel.add(saveFileLabel);
 
         sessionResults = new SessionResults();
@@ -84,22 +89,46 @@ public class Main {
         }
     }
 
+    private class showDebtorsListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            updateStudentsInfo(true);
+        }
+    }   private class showAllStudentsListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            updateStudentsInfo(false);
+        }
+    }
+
     private void showOpenFileDialog() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showOpenDialog(frame);
         if (option == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
-            try {
-                mainTextArea.setText("");
-                List<String> lines = Files.readAllLines(selectedFile.toPath());
-                for (String line : lines) {
-                    mainTextArea.append(line);
-                    mainTextArea.append("\n");
-                }
-                isFileSaved(true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            openFile(fileChooser.getSelectedFile().getAbsolutePath());
+        }
+    }
+
+    private void openFile(String path) {
+        ObjectInputStream objectInputStream;
+        try {
+            objectInputStream = new ObjectInputStream(new FileInputStream(path));
+            sessionResults = (SessionResults) objectInputStream.readObject();
+            objectInputStream.close();
+            updateStudentsInfo(false);
+            isFileSaved(true);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateStudentsInfo(boolean onlyDebtors) {
+        mainTextArea.setText("");
+        for (Student student : sessionResults.getStudents()) {
+            if (onlyDebtors && !student.isDebtor()) {
+                continue;
             }
+            mainTextArea.append(student.toString());
         }
     }
 
@@ -124,24 +153,10 @@ public class Main {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showSaveDialog(frame);
         if (option == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
             try {
-                if (selectedFile.createNewFile()) {
-                    writeToFile(selectedFile, mainTextArea.getText());
-                    isFileSaved(true);
-                } else {
-                    int input = JOptionPane.showConfirmDialog(
-                            null,
-                            "File already exists. Do you want to rewrite it?",
-                            "Attention!",
-                            JOptionPane.YES_NO_CANCEL_OPTION);
-                    if (input == 0) {
-                        writeToFile(selectedFile, mainTextArea.getText());
-                        isFileSaved(true);
-                    }
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
+                writeToFile(fileChooser.getSelectedFile().getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return option;
@@ -154,10 +169,17 @@ public class Main {
         }
     }
 
-    private void writeToFile(File file, String text) throws IOException {
-        FileWriter fileWriter = new FileWriter(file.getName(), false);
-        fileWriter.write(text);
-        fileWriter.close();
+    private void writeToFile(String path) throws IOException {
+        ObjectOutputStream objectOutputStream;
+        try {
+            objectOutputStream = new ObjectOutputStream(
+                    new FileOutputStream(path));
+            objectOutputStream.writeObject(sessionResults);
+            isFileSaved(true);
+            objectOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void isFileSaved(boolean isSaved) {

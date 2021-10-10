@@ -1,12 +1,13 @@
 package com.BezievTG;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SessionResults {
+public class SessionResults implements Serializable {
     private List<Student> students;
 
     public SessionResults() {
@@ -30,6 +31,5 @@ public class SessionResults {
                 = Comparator.comparing(Student::getGroup)
                 .thenComparing(Student::getSurname);
         students = students.stream().sorted(studentComparator).collect(Collectors.toList());
-//        sortedStudents.forEach(System.out::println);
     }
 }
