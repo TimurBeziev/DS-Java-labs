@@ -1,15 +1,16 @@
 package com.BezievTG;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
     private static JFrame frame;
@@ -32,7 +33,7 @@ public class Main {
         mainTextArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(mainTextArea);
         TextLineNumber tln = new TextLineNumber(mainTextArea);
-        scrollPane.setRowHeaderView( tln );
+        scrollPane.setRowHeaderView(tln);
 
 
         JMenuBar menu = new JMenuBar();
@@ -56,14 +57,35 @@ public class Main {
         frame.getContentPane().add(BorderLayout.NORTH, menu);
         frame.getContentPane().add(BorderLayout.CENTER, scrollPane);
         frame.setVisible(true);
-    }
 
-    private class findClosingTagListener implements ActionListener {
+    }
+        private class findClosingTagListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            String temp = openTagArea.getText();
+            if (temp.isEmpty()) {
+                return;
+            }
+            String closeTag = "</" + temp + "[^>/]*>";
+            String openCloseTag = "<" + temp + "[^>]*/>";
+            String regex = closeTag + "|" + openCloseTag;
             String text = mainTextArea.getText();
-            System.out.println(text);
-//            NewStudentFrame newStudentFrame = new NewStudentFrame(sessionResults, mainTextArea);
+            Highlighter hl = mainTextArea.getHighlighter();
+            hl.removeAllHighlights();
+
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(text);
+            while (matcher.find()) {
+                try {
+                    hl.addHighlight(matcher.start(), matcher.end(), DefaultHighlighter.DefaultPainter);
+                } catch (BadLocationException ex) {
+                    ex.printStackTrace();
+                }
+                System.out.print("Start index: " + matcher.start());
+                System.out.print(" End index: " + matcher.end());
+                System.out.println(" Found: " + matcher.group());
+            }
+
         }
     }
 
