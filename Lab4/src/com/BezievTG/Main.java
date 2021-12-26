@@ -81,11 +81,7 @@ public class Main {
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
                 }
-                System.out.print("Start index: " + matcher.start());
-                System.out.print(" End index: " + matcher.end());
-                System.out.println(" Found: " + matcher.group());
             }
-
         }
     }
 
