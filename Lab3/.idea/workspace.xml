@@ -2,38 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e526a16a-e571-4a67-a249-302010f73617" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/description.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/project-template.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/resourceBundles.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/BezievTG/CalcJDialog.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/BezievTG/Operations.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/res.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/res_En.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/res_Ru.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab5/.idea/description.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab5/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab5/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab5/.idea/project-template.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab5/.idea/runConfigurations.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab5/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab5/src/com/BezievTG/Client.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab5/src/com/BezievTG/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab5/src/com/BezievTG/Server.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Lab5/src/com/BezievTG/ServerThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab5/.idea/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab5/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Java.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab5/Lab5.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Lab3.iml" beforeDir="false" afterPath="$PROJECT_DIR$/untitled104.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/BezievTG/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/BezievTG/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/BezievTG/TextLineNumber.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab4/in" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab4/in" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab4/out/production/Lab4/In.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab4/src/com/BezievTG/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab4/src/com/BezievTG/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,7 +110,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1640532433972</updated>
-      <workItem from="1640532435471" duration="21285000" />
+      <workItem from="1640532435471" duration="22400000" />
     </task>
     <servers />
   </component>

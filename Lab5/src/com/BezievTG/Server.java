@@ -1,4 +1,5 @@
 package com.BezievTG;
+
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,15 +18,16 @@ public class Server {
                 ServerThread thread;
                 int number = -1;
 
-                for (int i = 0; i < server.serverThreads.size(); i++)
+                for (int i = 0; i < server.serverThreads.size(); i++) {
                     if (server.serverThreads.get(i).getState().toString().equals("TERMINATED")) {
                         number = i;
                         break;
                     }
-
+                }
                 if (number != -1) {
                     thread = new ServerThread(socket, number + 1);
                     server.serverThreads.set(number, thread);
+                    System.out.println(server.serverThreads);
                 } else {
                     number = server.serverThreads.size();
                     thread = new ServerThread(socket, number + 1);
@@ -52,25 +54,17 @@ public class Server {
     final static String CLOSE_CODE = "#%%CLOSE%%#";
     final static String GET_CODE = "#%%GET%%#";
     final static String END_CODE = "#%%END%%#";
-    static final String ANSI_RESET = "\u001B[0m";
-    static final String ANSI_CYAN = "\u001B[36m";
-    static final String ANSI_GREEN = "\u001B[32m";
-    static final String ANSI_RED = "\u001B[31m";
     private List<ServerThread> serverThreads;
     private ServerSocket serverSocket;
 
     static String getErrorMessage(String err) {
-        return ANSI_RED + err + ANSI_RESET;
-    }
-
-    static String cyan(String text) {
-        return ANSI_CYAN + text + ANSI_RESET;
+        return err;
     }
 
     void close() {
-        for (int i = 0; i < serverThreads.size(); i++) {
-            if (!serverThreads.get(i).getState().toString().equals("TERMINATED")) {
-                serverThreads.get(i).close();
+        for (ServerThread serverThread : serverThreads) {
+            if (!serverThread.getState().toString().equals("TERMINATED")) {
+                serverThread.close();
             }
         }
     }

@@ -28,7 +28,7 @@ public class ServerThread extends Thread {
                 String message = req.readLine();
                 if (message.equals(Server.GET_CODE)) {
                     String path = req.readLine();
-                    print(Server.cyan("GET ") + path);
+                    print("GET " + path);
                     res.println(Server.OK_CODE);
 
                     print("Start sending file");
@@ -54,7 +54,7 @@ public class ServerThread extends Thread {
     }
 
     private void print(String message) {
-        System.out.println(message + Server.cyan(" -> ") + "(Client#" + number + ")");
+        System.out.println(message +" -> " + "(Client#" + number + ")");
     }
 
     void disconnect() {
