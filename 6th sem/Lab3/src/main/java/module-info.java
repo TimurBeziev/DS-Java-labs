@@ -1,4 +1,4 @@
-module com.beziev.lab1.lab12 {
+module client {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -11,7 +11,9 @@ module com.beziev.lab1.lab12 {
     requires eu.hansolo.tilesfx;
     requires java.sql;
     requires org.apache.commons.lang3;
+    requires java.rmi;
 
-    opens com.beziev.lab3.lab3 to javafx.fxml;
-    exports com.beziev.lab3.lab3;
+    opens client to javafx.fxml;
+    exports client;
+    exports shared;
 }

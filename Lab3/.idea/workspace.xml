@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e526a16a-e571-4a67-a249-302010f73617" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab5/src/com/BezievTG/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab5/src/com/BezievTG/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Lab5/src/com/BezievTG/ServerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Lab5/src/com/BezievTG/ServerThread.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,6 +85,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="File.Encoding" />
   </component>
   <component name="RunManager">
@@ -111,6 +114,8 @@
       <option name="presentableId" value="Default" />
       <updated>1640532433972</updated>
       <workItem from="1640532435471" duration="22400000" />
+      <workItem from="1640610978392" duration="2020000" />
+      <workItem from="1646766851494" duration="18000" />
     </task>
     <servers />
   </component>
@@ -127,6 +132,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
