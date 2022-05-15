@@ -9,46 +9,46 @@ import java.util.stream.Stream;
 
 public class ServerThread extends Thread {
 
-    private PrintStream res;
-    private BufferedReader req;
+    private PrintStream out;
+    private BufferedReader in;
     private int number;
     private boolean isListen = true;
 
     public ServerThread(Socket socket, int number) throws IOException {
         this.number = number;
-        res = new PrintStream(socket.getOutputStream());
-        req = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        res.println(number);
+        out = new PrintStream(socket.getOutputStream());
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        out.println(number);
         print("New connection");
     }
 
     public void run() {
         while (isListen) {
             try {
-                String message = req.readLine();
+                String message = in.readLine();
                 if (message.equals(Server.GET_CODE)) {
-                    String path = req.readLine();
+                    String path = in.readLine();
                     print("GET " + path);
-                    res.println(Server.OK_CODE);
+                    out.println(Server.OK_CODE);
 
                     print("Start sending file");
                     try (Stream<String> stream = Files.lines(Paths.get(path))) {
                         stream.forEach((string) -> {
-                            res.println(string);
+                            out.println(string);
                             try {
                                 TimeUnit.SECONDS.sleep(1);
                             } catch (InterruptedException e) {
                             }
                         });
                     }
-                    res.println(Server.END_CODE);
+                    out.println(Server.END_CODE);
                     print("File send!");
                 } else if (message.equals(Server.CLIENT_DISCONNECT_CODE)) {
                     disconnect();
                 }
             } catch (IOException err) {
                 System.out.println(Server.getErrorMessage(err.toString()));
-                res.println(Server.NOT_FOUND_CODE);
+                out.println(Server.NOT_FOUND_CODE);
             }
         }
     }
@@ -60,11 +60,11 @@ public class ServerThread extends Thread {
     void disconnect() {
         isListen = false;
         try {
-            if (req != null) {
-                req.close();
+            if (in != null) {
+                in.close();
             }
-            if (res != null) {
-                res.close();
+            if (out != null) {
+                out.close();
             }
         } catch (IOException err) {
             System.out.println(Server.getErrorMessage(err.toString()));
@@ -76,6 +76,6 @@ public class ServerThread extends Thread {
 
     void close() {
         print("Disconnect from server");
-        res.println(Server.CLOSE_CODE);
+        out.println(Server.CLOSE_CODE);
     }
 }

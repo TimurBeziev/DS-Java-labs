@@ -22,7 +22,7 @@ public class Client extends JFrame implements ActionListener {
             try {
                 if (!client.listen)
                     break;
-                client.message = client.res.readLine();
+                client.message = client.out.readLine();
                 if (client.message.equals(Server.CLOSE_CODE)) {
                     JOptionPane.showMessageDialog(client, "Server is shutting down", "Warning!", JOptionPane.PLAIN_MESSAGE);
                     client.close();
@@ -45,12 +45,12 @@ public class Client extends JFrame implements ActionListener {
 
 
     private final static String newline = "\n";
-    private JButton browse = new JButton("browse");
+    private JButton browse = new JButton("GET");
     private JTextArea textArea = new JTextArea(20, 40);
 
     private Socket socket;
-    private BufferedReader res;
-    private PrintStream req;
+    private BufferedReader out;
+    private PrintStream in;
     private int number;
 
     public Client() {
@@ -82,10 +82,10 @@ public class Client extends JFrame implements ActionListener {
         listen = true;
         try {
             socket = new Socket(InetAddress.getLocalHost(), Server.PORT);
-            req = new PrintStream(socket.getOutputStream());
-            res = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new PrintStream(socket.getOutputStream());
+            out = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            this.number = Integer.parseInt(res.readLine());
+            this.number = Integer.parseInt(out.readLine());
             print("successfully connect to " + InetAddress.getLocalHost() + ":" + Server.PORT + newline);
             this.setTitle("Client#" + number);
             pack();
@@ -103,8 +103,8 @@ public class Client extends JFrame implements ActionListener {
                 return;
             }
             print("GET " + path);
-            req.println(Server.GET_CODE);
-            req.println(path);
+            in.println(Server.GET_CODE);
+            in.println(path);
             int code;
             writeLock.lock();
             try {
@@ -157,9 +157,9 @@ public class Client extends JFrame implements ActionListener {
 
     void close() {
         try {
-            req.println(Server.CLIENT_DISCONNECT_CODE);
-            req.close();
-            res.close();
+            in.println(Server.CLIENT_DISCONNECT_CODE);
+            in.close();
+            out.close();
             listen = false;
             socket.close();
             setVisible(false);
