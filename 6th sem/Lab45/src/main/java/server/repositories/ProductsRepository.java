@@ -22,6 +22,13 @@ public class ProductsRepository {
         products.add(new Product(maxUniqueID, name));
         maxUniqueID++;
     }
+    public void addProduct(int uniqueID, String name) {
+        products.add(new Product(uniqueID, name));
+    }
+
+    public List<Product> getProducts(){
+        return products;
+    }
 
     public boolean contains(String name) {
         return !Objects.isNull(getProductByName(name));
@@ -38,6 +45,6 @@ public class ProductsRepository {
 
     @Override
     public String toString() {
-        return "products=" + products + ", maxUniqueID=" + maxUniqueID;
+        return "products=\n" + products + "\nmaxUniqueID=" + maxUniqueID;
     }
 }

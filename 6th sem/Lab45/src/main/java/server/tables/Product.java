@@ -13,11 +13,12 @@ public class Product {
         return name;
     }
 
+    public int getUniqueID() {
+        return uniqueID;
+    }
+
     @Override
     public String toString() {
-        return "Product{" +
-                "uniqueID=" + uniqueID +
-                ", name='" + name + '\'' +
-                '}';
+        return  "product name = " + name;
     }
 }

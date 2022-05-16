@@ -13,11 +13,12 @@ public class Stock {
         return name;
     }
 
+    public int getUniqueID() {
+        return uniqueID;
+    }
+
     @Override
     public String toString() {
-        return "Stock{" +
-                "uniqueID=" + uniqueID +
-                ", name='" + name + '\'' +
-                '}';
+        return "stock name = " + name;
     }
 }

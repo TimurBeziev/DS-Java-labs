@@ -17,8 +17,16 @@ public class InfoRepository {
     }
 
     public void add(Product product, Stock stock, double price) {
-        items.add(new Item(product, stock, price));
+        items.add(new Item(maxUniqueID, product, stock, price));
         maxUniqueID++;
+    }
+
+    public void add(int uniqueID, Product product, Stock stock, double price) {
+        items.add(new Item(uniqueID, product, stock, price));
+    }
+
+    public List<Item> getInfo() {
+        return items;
     }
 
     public void clearRepository() {
@@ -65,6 +73,6 @@ public class InfoRepository {
 
     @Override
     public String toString() {
-        return "items=" + items + ", maxUniqueID=" + maxUniqueID;
+        return "items=\n" + items + "\nmaxUniqueID=" + maxUniqueID;
     }
 }

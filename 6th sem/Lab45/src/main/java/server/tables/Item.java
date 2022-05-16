@@ -1,11 +1,13 @@
 package server.tables;
 
 public class Item {
-    Product product;
-    Stock stock;
-    double price;
+    private int uniqueID;
+    private Product product;
+    private Stock stock;
+    private double price;
 
-    public Item(Product product, Stock stock, double price) {
+    public Item(int uniqueID, Product product, Stock stock, double price) {
+        this.uniqueID = uniqueID;
         this.product = product;
         this.stock = stock;
         this.price = price;
@@ -23,15 +25,16 @@ public class Item {
         return price;
     }
 
+    public int getUniqueID() {
+        return uniqueID;
+    }
+
     public void setPrice(double price) {
         this.price = price;
     }
+
     @Override
     public String toString() {
-        return "Item{" +
-                product +
-                stock +
-                ", price=" + price +
-                "}\n";
+        return product + "\t" + stock + "\t price = " + price + "\n";
     }
 }

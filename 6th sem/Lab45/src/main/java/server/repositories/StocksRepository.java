@@ -1,5 +1,6 @@
 package server.repositories;
 
+import server.tables.Product;
 import server.tables.Stock;
 
 import java.util.ArrayList;
@@ -22,6 +23,12 @@ public class StocksRepository {
         stocks.add(new Stock(maxUniqueID, name));
         maxUniqueID++;
     }
+    public void addStock(int uniqueID, String name) {
+        stocks.add(new Stock(uniqueID, name));
+    }
+    public List<Stock> getStocks(){
+        return stocks;
+    }
 
     public boolean contains(String name) {
         return !Objects.isNull(getStockByName(name));
@@ -38,6 +45,6 @@ public class StocksRepository {
 
     @Override
     public String toString() {
-        return "stocks=" + stocks + ", maxUniqueID=" + maxUniqueID;
+        return "stocks=\n" + stocks + "\nmaxUniqueID=" + maxUniqueID;
     }
 }

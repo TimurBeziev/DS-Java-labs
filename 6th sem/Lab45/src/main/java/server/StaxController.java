@@ -1,31 +1,48 @@
 package server;
 
-
 import server.repositories.InfoRepository;
 import server.repositories.ProductsRepository;
 import server.repositories.StocksRepository;
 import shared.JdbcInterface;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
-import java.sql.Statement;
 
 public class StaxController implements JdbcInterface {
 
     private ProductsRepository productsRepository;
     private StocksRepository stocksRepository;
     private InfoRepository infoRepository;
+    private XMLReadWriter xmlReadWriter;
+    private String productsRepoPath;
+    private String stocksRepoPath;
+    private String infosRepoPath;
 
-    StaxController(String productsPath, String stocksPath, String infoPath) {
-        productsRepository = new ProductsRepository();
-        stocksRepository = new StocksRepository();
-        infoRepository = new InfoRepository();
+
+    StaxController(String productsRepoPath, String stocksRepoPath, String infosRepoPath) {
         System.out.println("init controller");
+        this.productsRepoPath = productsRepoPath;
+        this.stocksRepoPath = stocksRepoPath;
+        this.infosRepoPath = infosRepoPath;
+
+        this.xmlReadWriter = new XMLReadWriter();
+
+        try {
+            initializeXMLReadWriter();
+        } catch (XMLStreamException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
-    StaxController() {
-        productsRepository = new ProductsRepository();
-        stocksRepository = new StocksRepository();
-        infoRepository = new InfoRepository();
+    private void initializeXMLReadWriter() throws XMLStreamException, FileNotFoundException {
+        xmlReadWriter.readProductRepository(productsRepoPath);
+        xmlReadWriter.readStocksRepository(stocksRepoPath);
+        xmlReadWriter.readInfosRepository(infosRepoPath);
+
+        this.productsRepository = xmlReadWriter.getProductsRepository();
+        this.stocksRepository = xmlReadWriter.getStocksRepository();
+        this.infoRepository = xmlReadWriter.getInfoRepository();
     }
 
     @Override
@@ -43,8 +60,11 @@ public class StaxController implements JdbcInterface {
                 stocksRepository.getStockByName(stock),
                 productPrice
         );
-
-        System.out.println(infoRepository);
+        try {
+            writeToXml();
+        } catch (XMLStreamException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -66,6 +86,11 @@ public class StaxController implements JdbcInterface {
                     Double.parseDouble(price)
             );
         }
+        try {
+            writeToXml();
+        } catch (XMLStreamException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -74,7 +99,7 @@ public class StaxController implements JdbcInterface {
             return;
         }
 
-        Double productPricePercentage = Double.parseDouble(pricePercentage) / 100;
+        double productPricePercentage = Double.parseDouble(pricePercentage) / 100;
 
         if (product.isBlank() && stock.isBlank()) {
             infoRepository.changePrice(productPricePercentage);
@@ -91,6 +116,17 @@ public class StaxController implements JdbcInterface {
                     productPricePercentage
             );
         }
+        try {
+            writeToXml();
+        } catch (XMLStreamException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeToXml() throws XMLStreamException, FileNotFoundException {
+        xmlReadWriter.writeProductsRepository(productsRepoPath, productsRepository);
+        xmlReadWriter.writeStocksRepository(stocksRepoPath, stocksRepository);
+        xmlReadWriter.writeInfosRepository(infosRepoPath, infoRepository);
     }
 
     @Override
