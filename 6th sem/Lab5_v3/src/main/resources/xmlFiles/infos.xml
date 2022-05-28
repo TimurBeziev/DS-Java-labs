@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<info>
+    <item id="1" product_name="pr5" stock_name="st5" price="31968.0"></item>
+    <item id="2" product_name="pr5" stock_name="st5" price="31968.0"></item>
+    <item id="3" product_name="pr5" stock_name="st5" price="31968.0"></item>
+    <item id="4" product_name="pr5" stock_name="st5" price="31968.0"></item>
+    <item id="5" product_name="pr88" stock_name="st45" price="1280.0"></item>
+    <item id="6" product_name="pr88" stock_name="st45" price="1280.0"></item>
+    <item id="7" product_name="pr88" stock_name="st45" price="1331.2"></item>
+    <item id="8" product_name="pr88" stock_name="st45" price="1341.44"></item>
+    <item id="9" product_name="pr88" stock_name="st3" price="8192.0"></item>
+    <item id="10" product_name="pr88" stock_name="st3" price="270336.0"></item>
+    <item id="11" product_name="pr88" stock_name="st3" price="270336.0"></item>
+</info>
