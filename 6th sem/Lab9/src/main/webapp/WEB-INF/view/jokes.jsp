@@ -1,12 +1,5 @@
-<%@ page isErrorPage="true" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-<html>
-<head>
-    <title>Error</title>
-</head>
-<body>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <style>
     * {
         font-family: Helvetica, Verdana, sans-serif;
@@ -19,12 +12,6 @@
         padding: 10px;
         text-align: center;
         align-items: center;
-        appearance: none;
-        background-color: #FCFCFD;
-        border-radius: 4px;
-        border-width: 0;
-        box-shadow: rgb(45 35 66 / 10%) 0 20px 40px, rgb(45 35 66 / 10%) 0 0px 26px 0px, #d6d6e9 0 -2px 0 inset;
-        box-sizing: border-box;
     }
 
     .button {
@@ -35,7 +22,7 @@
         border-width: 0;
         box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
         box-sizing: border-box;
-        color: #ff0000;
+        color: #36395A;
         cursor: pointer;
         display: inline-flex;
         font-family: "JetBrains Mono", monospace;
@@ -71,34 +58,50 @@
         box-shadow: #D6D6E7 0 3px 7px inset;
         transform: translateY(2px);
     }
-
-    ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    li {
-        font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
-        border-bottom: 1px solid #ccc;
-    }
-
 </style>
 
-<form method="post" action="">
-    <div class="center">
-        <h3>BAAAMS AN ERROR OCCURED!</h3>
+<div class="center">
+    <c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 5) %>
+    </c:set>
+    <h2>${rand}</h2>
+    <c:if test="${rand == 0}">
         <h2>
-            Exception is:
-            <br>
-            <%= exception %>
+            У волков нет правил поведения.
+            Они им не нужны.
+            Волкам, чтобы быть волками, не нужны никакие правила.
         </h2>
+    </c:if>
+    <c:if test="${rand == 1}">
+        <h2>
+            Если волк молчит, то лучше его не перебивать
+        </h2>
+    </c:if>
+    <c:if test="${rand == 2}">
+        <h2>
+            Волк волку человек.
+        </h2>
+    </c:if>
+    <c:if test="${rand == 3}">
+        <h2>
+            Овца и волк по-разному понимают слово "свобода".
+        </h2>
+    </c:if>
+    <c:if test="${rand == 4}">
+        <h2>
+            Всю жизнь овца волков боялась, а съел её пастух.
+        </h2>
+    </c:if><c:if test="${rand == 5}">
+    <h2>
+        Если не будешь с волками в стае, то станешь их кормом.
+    </h2>
+</c:if>
 
-        <button class="button" type="submit" name="prevStage">Извиняюсь, больше так не буду</button>
-    </div>
-</form>
 
+    <form method="post" action="">
+        <div class="center">
+            <button class="button" type="submit" name="mainPage">Спасибо, больше не надо</button>
+            <button class="button" type="submit" name="readJoke">Еще</button>
+        </div>
+    </form>
+</div>
 
-
-</body>
-</html>

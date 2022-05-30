@@ -1,8 +1,12 @@
 package kr.controller;
 
 import kr.repositories.ProductsRepository;
+import kr.repositories.StocksRepository;
+import kr.tables.Item;
 import kr.tables.Product;
+import kr.tables.Stock;
 
+import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -41,68 +45,123 @@ public class JDBCController {
         stmt.close();
     }
 
-    public void addProduct(String product, String stock, String price) throws SQLException {
+    public void addProduct(String product, String stock, String price) throws RemoteException {
         if (product.isBlank() || stock.isBlank() || price.isBlank()) {
             System.out.println("can't add product");
+//            throw new RemoteException("can't add product");
             return;
         }
 
         double productPrice = Double.parseDouble(price);
-        Statement stmt = connection.createStatement();
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
 
-        if (getProductID(product) == -1) {
-            stmt.execute(String.format("INSERT INTO products (name) VALUES ('%s');", product));
+            if (getProductID(product) == -1) {
+                stmt.execute(String.format("INSERT INTO products (name) VALUES ('%s');", product));
+            }
+
+            if (getStockID(stock) == -1) {
+                stmt.execute(String.format("INSERT INTO stocks (name) VALUES ('%s');", stock));
+            }
+
+            stmt.execute(String.format("INSERT INTO info (Product_id, Stock_id, Price) VALUES (%d,%d,%f);",
+                    getProductID(product), getStockID(stock), productPrice));
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+    }
 
-        if (getStockID(stock) == -1) {
-            stmt.execute(String.format("INSERT INTO stocks (name) VALUES ('%s');", stock));
+    public void removeProduct(String product, String stock, String price) throws RemoteException {
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+
+            String sql = null;
+
+            if (product.isBlank() && stock.isBlank() && price.isBlank()) {
+                sql = String.format(
+                        "DELETE FROM info;\n");
+            } else if (stock.isBlank() && price.isBlank()) {
+                sql = String.format(
+                        "DELETE FROM info\n" +
+                                "WHERE info.Product_id = ('%d');",
+                        getProductID(product));
+            } else if (price.isBlank()) {
+                sql = String.format(
+                        "DELETE FROM info\n" +
+                                "WHERE info.Product_id = ('%d')\n" +
+                                "AND info.Stock_id = ('%d');",
+                        getProductID(product), getStockID(stock));
+            } else if (!product.isBlank() && !stock.isBlank() && !price.isBlank()) {
+                sql = String.format(
+                        "DELETE FROM info\n" +
+                                "WHERE info.Product_id = ('%d')\n" +
+                                "AND info.Stock_id = ('%d')\n" +
+                                "AND info.Price = ('%f');",
+                        getProductID(product), getStockID(stock), Float.parseFloat(price));
+            }
+            stmt.execute(sql);
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        stmt.execute(String.format("INSERT INTO info (Product_id, Stock_id, Price) VALUES (%d,%d,%f);",
-                getProductID(product), getStockID(stock), productPrice));
-
     }
 
     public void changePrice(String product, String stock, String pricePercentage) throws SQLException {
         if (pricePercentage.isBlank()) {
             return;
         }
-        Statement stmt = connection.createStatement();
-        String sql = null;
-        Double productPricePercentage = Double.parseDouble(pricePercentage) / 100;
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            String sql = null;
+            Double productPricePercentage = Double.parseDouble(pricePercentage) / 100;
 
-        if (product.isBlank() && stock.isBlank()) {
-            sql = String.format(
-                    "UPDATE info SET price = price * %f;\n", productPricePercentage);
-        } else if (stock.isBlank()) {
-            sql = String.format(
-                    "UPDATE info SET price = price * %f\n" +
-                            "WHERE info.Product_id = ('%d');", productPricePercentage, getProductID(product));
-        } else {
-            sql = String.format(
-                    "UPDATE info SET price = price * %f\n" +
-                            "WHERE info.Product_id = ('%d')\n" +
-                            "AND info.Stock_id = ('%d');",
-                    productPricePercentage, getProductID(product), getStockID(stock));
+            if (product.isBlank() && stock.isBlank()) {
+                sql = String.format(
+                        "UPDATE info SET price = price * %f;\n",
+                        productPricePercentage);
+            } else if (stock.isBlank()) {
+                sql = String.format(
+                        "UPDATE info SET price = price * %f\n" +
+                                "WHERE info.Product_id = ('%d');",
+                        productPricePercentage, getProductID(product));
+            } else {
+                sql = String.format(
+                        "UPDATE info SET price = price * %f\n" +
+                                "WHERE info.Product_id = ('%d')\n" +
+                                "AND info.Stock_id = ('%d');",
+                        productPricePercentage, getProductID(product), getStockID(stock));
+            }
+            stmt.execute(sql);
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        stmt.execute(sql);
-        stmt.close();
     }
 
-    public String getInfoTable() throws SQLException {
+    public List<Item> getInfoTable() throws SQLException {
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT * FROM info;");
-        StringBuilder result = new StringBuilder("ID \t Product_id \t Stock_id \t Price \n");
+        List<Item> items = new ArrayList<>();
+
         while (rs.next()) {
-            result.append(String.format("%d \t\t %d \t\t\t\t %d \t\t %.2f \t\t",
-                    rs.getInt(1),
-                    rs.getInt(2),
-                    rs.getInt(3),
-                    rs.getFloat(4))).append("\n");
+            int id = rs.getInt(1);
+
+            int productId = rs.getInt(2);
+            Product product = getProductById(productId);
+
+            int stockId = rs.getInt(3);
+            Stock stock = getStockById(stockId);
+
+            double price = rs.getDouble(4);
+
+            items.add(new Item(id, product, stock, price));
         }
 
         stmt.close();
-        return result.toString();
+        return items;
     }
 
     public List<Product> getProductsTable() throws SQLException {
@@ -112,22 +171,37 @@ public class JDBCController {
         while (rs.next()) {
             products.add(new Product(rs.getInt(1), rs.getString(2)));
         }
-
         stmt.close();
         return products;
     }
 
-    public String getStocksTable() throws SQLException {
+    public List<Stock> getStocksTable() throws SQLException {
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT * FROM stocks;");
-        StringBuilder result = new StringBuilder("ID \t Name\n");
+        List<Stock> stocks = new ArrayList<>();
         while (rs.next()) {
-            result.append(String.format("%d \t\t %s \t\t",
-                    rs.getInt(1),
-                    rs.getString(2))).append("\n");
+            stocks.add(new Stock(rs.getInt(1), rs.getString(2)));
         }
         stmt.close();
-        return result.toString();
+        return stocks;
+    }
+
+    public Product getProductById(int id) throws SQLException {
+        for (Product product : getProductsTable()) {
+            if (product.getUniqueID() == id) {
+                return product;
+            }
+        }
+        return null;
+    }
+
+    public Stock getStockById(int id) throws SQLException {
+        for (Stock stock : getStocksTable()) {
+            if (stock.getUniqueID() == id) {
+                return stock;
+            }
+        }
+        return null;
     }
 
     private int getProductID(String productName) throws SQLException {

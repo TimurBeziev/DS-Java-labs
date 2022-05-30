@@ -35,11 +35,19 @@ public class ProductsRepository implements Serializable {
     }
 
     public List<Product> getProducts() throws SQLException {
-        System.out.println(db.getProductsTable());
-        return db.getProductsTable();
+        products = db.getProductsTable();
+        return products;
     }
 
     public void setProducts(List<Product> products) {
         this.products = products;
+    }
+
+    public JDBCController getDb() {
+        return db;
+    }
+
+    public void setDb(JDBCController db) {
+        this.db = db;
     }
 }

@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:useBean id="infosRepository" type="kr.repositories.InfosRepository" scope="session"/>
+
 
 <style>
     .container {
@@ -34,21 +37,21 @@
     <table>
         <thead>
         <tr>
-            <th>Column 1</th>
-            <th>Column 2</th>
-            <th>Column 3</th>
-            <th>Column 4</th>
-            <th>Column 5</th>
+            <th>Id</th>
+            <th>Product Name</th>
+            <th>Stock Name</th>
+            <th>Price</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>Cell 1</td>
-            <td>Cell 2</td>
-            <td>Cell 3</td>
-            <td>Cell 4</td>
-            <td>Cell 5</td>
-        </tr>
+        <c:forEach items="${infosRepository.items}" var="element">
+            <tr>
+                <td>${element.uniqueID}</td>
+                <td>${element.product.name}</td>
+                <td>${element.stock.name}</td>
+                <td>${element.price}</td>
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
 </div>

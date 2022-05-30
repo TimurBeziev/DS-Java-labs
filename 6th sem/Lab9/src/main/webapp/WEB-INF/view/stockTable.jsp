@@ -1,25 +1,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:useBean id="stocksRepository" type="kr.repositories.StocksRepository" scope="session"/>
 
 <div class="container">
     <h1>stocks</h1>
     <table>
         <thead>
         <tr>
-            <th>Column 1</th>
-            <th>Column 2</th>
-            <th>Column 3</th>
-            <th>Column 4</th>
-            <th>Column 5</th>
+            <th>ID</th>
+            <th>Stock Name</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>Cell 1</td>
-            <td>Cell 2</td>
-            <td>Cell 3</td>
-            <td>Cell 4</td>
-            <td>Cell 5</td>
-        </tr>
+        <c:forEach items="${stocksRepository.stocks}" var="element">
+            <tr>
+                <td>${element.uniqueID}</td>
+                <td>${element.name}</td>
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
 </div>

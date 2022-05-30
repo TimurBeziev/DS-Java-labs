@@ -1,8 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%--<%@ page errorPage="./error.jsp" %>--%>
-
+<%@ page errorPage="./error.jsp" %>
 
 
 <html>
@@ -124,18 +123,26 @@
 </style>
 
 <jsp:include page="header.jsp"/>
+
+<form method="post" action="">
+    <div class="center">
+        <label><input class="input" type="text" name="productName" placeholder="product name"></label>
+        <label><input class="input" type="text" name="stockName" placeholder="stock name"></label>
+        <label><input class="input" type="number" step="0.01" name="price" placeholder="price"></label><br>
+
+        <button class="button" type="submit" name="addProduct">Добавить продукт</button>
+        <button class="button" type="submit" name="deleteProduct">Удалить продукт</button>
+
+    </div>
+</form>
+
 <jsp:include page="infosTable.jsp"/>
 <jsp:include page="productsTable.jsp"/>
 <jsp:include page="stockTable.jsp"/>
 
 <form method="post" action="">
     <div class="center">
-        <label><input class="input" type="text" name="productName" placeholder="product name"></label>
-        <label><input class="input" type="text" name="stockName" placeholder="stock name"></label>
-        <label><input class="input" type="number" name="price" placeholder="price"></label><br>
-
-        <button class="button" type="submit" name="addProduct">Добавить продукт</button>
-
+        <button class="button" type="submit" name="readJoke">Цитаты про волков</button>
     </div>
 </form>
 
